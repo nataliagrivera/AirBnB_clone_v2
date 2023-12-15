@@ -12,19 +12,27 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 class State(BaseModel, Base):
     """ State class """
     __tablename__ = "states"
+    name = Column(String(128), nullable=False)
+    cities = relationship("City", backref="state", cascade="all, delete")
+
     if getenv('HBNB_TYPE_STORAGE') == 'db':
-        name = Column(String(128), nullable=False)
-        cities = relationship("City", backref="state", cascade="all, delete")
-
-    else:
-        name = ''
-
         @property
         def cities(self):
-            """Getter"""
-            city_lst = []
-            all_cities = models.storage.all(City)
-            for city in all_cities.values():
-                if city.state_id == self.id:
-                    city_lst.append(city)
-            return city_lst
+            """Getter
+            """
+            from models import storage
+            all_cities = storage.all(City)
+            return [city for city in all_cities.values()
+                    if city.state_id == self.id]
+
+
+    #    @property
+    #    def cities(self):
+    #        """Getter"""
+    #        city_lst = []
+    #        all_cities = models.storage.all(City)
+    #        for city in all_cities.values():
+    #            if city.state_id == self.id:
+    #                city_lst.append(city)
+    #        return city_lst
+
