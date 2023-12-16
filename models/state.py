@@ -18,13 +18,12 @@ class State(BaseModel, Base):
     if getenv('HBNB_TYPE_STORAGE') == 'db':
         @property
         def cities(self):
-            """Getter
+            """Getter for cities related to the current state
             """
             from models import storage
             all_cities = storage.all(City)
             return [city for city in all_cities.values()
-                    if city.state_id == self.id]
-
+                    if getattr(city, 'state_id', None) == self.id]
 
     #    @property
     #    def cities(self):
@@ -35,4 +34,3 @@ class State(BaseModel, Base):
     #            if city.state_id == self.id:
     #                city_lst.append(city)
     #        return city_lst
-
