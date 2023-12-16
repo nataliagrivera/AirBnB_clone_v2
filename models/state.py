@@ -25,6 +25,7 @@ class State(BaseModel, Base):
             return [city for city in all_cities.values()
                     if getattr(city, 'state_id', None) == self.id]
 
+
     #    @property
     #    def cities(self):
     #        """Getter"""
